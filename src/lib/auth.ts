@@ -23,19 +23,23 @@ export function verifyJwt(token: string) {
 export async function getUserFromToken() {
   const token = (await cookies()).get("token")?.value;
 
-  if (!token) return null;
+  if (!token) {
+    console.log("No token found");
+    return null;
+  }
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET!) as {
-      userId: string;
+      id: string;
     };
 
     const user = await prisma.user.findUnique({
-      where: { id: decoded.userId },
+      where: { id: decoded.id },
     });
 
     return user;
   } catch (error) {
+    console.log("Invalid token", error);
     return null;
   }
 }
