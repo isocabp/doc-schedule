@@ -1,0 +1,58 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String
+  image     String?
+  role      Role     @default(PATIENT)
+
+  specialty String?         // Só se for médico
+  healthPlans String[]      // Array de planos de saúde
+
+  appointmentsAsPatient   Appointment[] @relation("PatientAppointments")
+  appointmentsAsDoctor    Appointment[] @relation("DoctorAppointments")
+  blockedDates   BlockedDate[]  // Datas bloqueadas (ex.: férias)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Appointment {
+  id          String   @id @default(uuid())
+  patient     User     @relation("PatientAppointments", fields: [patientId], references: [id])
+  patientId   String
+
+  doctor      User     @relation("DoctorAppointments", fields: [doctorId], references: [id])
+  doctorId    String
+
+  date        DateTime
+  notes       String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model BlockedDate {
+  id        String   @id @default(uuid())
+  doctor    User     @relation(fields: [doctorId], references: [id])
+  doctorId  String
+
+  date      DateTime
+  reason    String?
+
+  createdAt DateTime @default(now())
+}
+
+enum Role {
+  PATIENT
+  DOCTOR
+}
