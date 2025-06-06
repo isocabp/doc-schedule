@@ -1,4 +1,6 @@
 import { prisma } from "@/lib/prisma";
+import { getUserFromToken } from "@/lib/auth";
+import { scheduleAppointment } from "@/app/actions/schedule-appointment";
 import {
   Card,
   CardContent,
@@ -8,9 +10,18 @@ import {
   Label,
   Input,
 } from "@/components/ui";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
+import Sidebar from "../../../_components/sidebar";
 import { notFound, redirect } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
+import SelectDateTime from "@/components/SelectDateTime";
 
 interface SchedulePageProps {
   params: {
@@ -21,27 +32,16 @@ interface SchedulePageProps {
 export default async function SchedulePage({ params }: SchedulePageProps) {
   const doctor = await prisma.user.findUnique({
     where: { id: params.id },
+    select: {
+      id: true,
+      name: true,
+      image: true,
+      role: true,
+    },
   });
 
   if (!doctor || doctor.role !== "DOCTOR") {
     return notFound();
-  }
-
-  async function handleSubmit(formData: FormData) {
-    "use server";
-
-    const date = formData.get("date") as string;
-    const patientId = ""; // aqui você deve capturar o paciente logado (vou te ensinar a fazer)
-
-    await prisma.appointment.create({
-      data: {
-        date: new Date(date),
-        patientId: patientId,
-        doctorId: params.id,
-      },
-    });
-
-    redirect("/dashboard/patient/appointments");
   }
 
   return (
@@ -60,11 +60,26 @@ export default async function SchedulePage({ params }: SchedulePageProps) {
             <CardTitle>Agendar Consulta com {doctor.name}</CardTitle>
           </CardHeader>
           <CardContent>
-            <form action={handleSubmit} className="space-y-4">
+            <form action={scheduleAppointment} className="space-y-4">
               <div className="space-y-2">
-                <Label>Selecione uma data e horário</Label>
-                <Input type="datetime-local" name="date" required />
+                <SelectDateTime />
               </div>
+
+              <div className="space-y-2">
+                <Label>É sua primeira consulta com esse médico?</Label>
+                <select
+                  name="isFirst"
+                  required
+                  className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
+                >
+                  <option value="">Selecione</option>
+                  <option value="yes">Sim</option>
+                  <option value="no">Não</option>
+                </select>
+              </div>
+
+              {/* campo oculto com id do médico */}
+              <input type="hidden" name="doctorId" value={params.id} />
 
               <Button type="submit" className="w-full">
                 Confirmar Agendamento

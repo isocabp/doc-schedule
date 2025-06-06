@@ -72,7 +72,7 @@ export default function PatientSettingsPage() {
 
       <div className="flex-1 p-6 bg-neutral-50">
         <div className="max-w-xl mx-auto space-y-6">
-          <h1 className="text-2xl font-semibold">Configurações da Conta</h1>
+          <h1 className="text-2xl  font-semibold">Configurações da Conta</h1>
 
           <Card>
             <CardHeader>

@@ -40,6 +40,8 @@ model Appointment {
   date  DateTime
   notes String?
 
+  isFirstAppointment Boolean @default(false)
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
