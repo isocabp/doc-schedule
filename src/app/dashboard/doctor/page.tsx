@@ -4,6 +4,7 @@ import { CalendarDays, Users, Settings, LayoutDashboard } from "lucide-react";
 import { formatWithOptions } from "date-fns/fp";
 import { ptBR } from "date-fns/locale/pt-BR";
 import Link from "next/link";
+import Sidebar from "./availability/_components/sidebar";
 
 export default async function DoctorDashboard() {
   const user = await getUserFromToken();
@@ -57,39 +58,7 @@ export default async function DoctorDashboard() {
   return (
     <div className="flex min-h-screen">
       {/* Sidebar */}
-      <aside className="w-1/4 bg-neutral-200 p-6 flex flex-col">
-        <h1 className="text-2xl font-bold mb-10">DocSchedule</h1>
-
-        <nav className="flex flex-col gap-4">
-          <Link
-            href="/dashboard/doctor"
-            className="flex items-center gap-2 hover:text-blue-600"
-          >
-            <LayoutDashboard size={18} /> Dashboard
-          </Link>
-
-          <Link
-            href="/dashboard/doctor/agenda"
-            className="flex items-center gap-2 hover:text-blue-600"
-          >
-            <CalendarDays size={18} /> Agenda
-          </Link>
-
-          <Link
-            href="/dashboard/doctor/patients"
-            className="flex items-center gap-2 hover:text-blue-600"
-          >
-            <Users size={18} /> Pacientes
-          </Link>
-
-          <Link
-            href="/dashboard/doctor/settings"
-            className="flex items-center gap-2 hover:text-blue-600"
-          >
-            <Settings size={18} /> Configurações
-          </Link>
-        </nav>
-      </aside>
+      <Sidebar />
 
       {/* Main */}
       <main className="flex-1 bg-neutral-50 p-8">

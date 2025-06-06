@@ -71,8 +71,14 @@ export default function Sidebar() {
       </nav>
 
       <div className="p-4">
-        <Button variant="outline" className="w-full" onClick={handleLogout}>
-          <LogOut className="h-4 w-4 mr-2" />
+        <Button
+          variant="outline"
+          className="w-full bg-green"
+          onClick={async () => {
+            await fetch("/api/auth/logout", { method: "POST" });
+            window.location.href = "/login";
+          }}
+        >
           Sair
         </Button>
       </div>
