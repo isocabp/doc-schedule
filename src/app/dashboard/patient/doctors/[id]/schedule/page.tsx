@@ -1,27 +1,10 @@
 import { prisma } from "@/lib/prisma";
-import { getUserFromToken } from "@/lib/auth";
-import { scheduleAppointment } from "@/app/actions/schedule-appointment";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  Button,
-  Label,
-  Input,
-} from "@/components/ui";
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@/components/ui/select";
-import Sidebar from "../../../_components/sidebar";
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
+import Sidebar from "@/app/dashboard/patient/_components/sidebar"; // ajusta o path se precisar
+import { ClientScheduleForm } from "./ClientScheduleForm";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
-import SelectDateTime from "@/components/SelectDateTime";
 
 interface SchedulePageProps {
   params: {
@@ -35,7 +18,6 @@ export default async function SchedulePage({ params }: SchedulePageProps) {
     select: {
       id: true,
       name: true,
-      image: true,
       role: true,
     },
   });
@@ -45,49 +27,19 @@ export default async function SchedulePage({ params }: SchedulePageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-neutral-50 p-6">
-      <div className="max-w-2xl mx-auto space-y-6">
-        {/* Botão Voltar */}
-        <Link href={`/dashboard/patient/doctors/${params.id}`}>
-          <Button variant="outline">
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Voltar
-          </Button>
-        </Link>
+    <div className="flex min-h-screen">
+      <Sidebar />
+      <main className="flex-1 bg-muted/40 p-8 flex justify-center">
+        <div className="w-full max-w-2xl bg-white rounded-lg shadow-md p-8 space-y-6">
+          <Link href="/dashboard/patient/doctors">
+            <Button variant="outline" className="mb-4 flex items-center">
+              <ArrowLeft className="mr-2 w-4 h-4" /> Voltar para Médicos
+            </Button>
+          </Link>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Agendar Consulta com {doctor.name}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <form action={scheduleAppointment} className="space-y-4">
-              <div className="space-y-2">
-                <SelectDateTime />
-              </div>
-
-              <div className="space-y-2">
-                <Label>É sua primeira consulta com esse médico?</Label>
-                <select
-                  name="isFirst"
-                  required
-                  className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
-                >
-                  <option value="">Selecione</option>
-                  <option value="yes">Sim</option>
-                  <option value="no">Não</option>
-                </select>
-              </div>
-
-              {/* campo oculto com id do médico */}
-              <input type="hidden" name="doctorId" value={params.id} />
-
-              <Button type="submit" className="w-full">
-                Confirmar Agendamento
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
-      </div>
+          <ClientScheduleForm doctorId={doctor.id} doctorName={doctor.name} />
+        </div>
+      </main>
     </div>
   );
 }

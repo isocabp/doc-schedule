@@ -26,6 +26,11 @@ export default function AvailabilityItem({ item }: { item: Availability }) {
         <p className="font-medium">{weekdays[item.weekday]}</p>
         <p className="text-sm text-muted-foreground">
           {item.startTime} - {item.endTime}
+          {item.interval && (
+            <span className="ml-2 text-xs text-muted-foreground">
+              • Intervalo: {item.interval}min
+            </span>
+          )}
         </p>
       </div>
       <Button variant="outline" size="icon" onClick={handleDelete}>

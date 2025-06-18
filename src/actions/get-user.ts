@@ -15,6 +15,8 @@ export async function getUser() {
       email: true,
       image: true,
       phone: true,
+      specialty: true,
+      healthPlans: true,
     },
   });
 

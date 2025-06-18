@@ -2,13 +2,24 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { CalendarCheck, LogOut, Settings, Stethoscope } from "lucide-react";
+import {
+  CalendarCheck,
+  LogOut,
+  Settings,
+  Stethoscope,
+  LayoutDashboard,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { deleteCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 const links = [
+  {
+    label: "Dashboard",
+    href: "/dashboard/patient",
+    icon: LayoutDashboard,
+  },
   {
     href: "/dashboard/patient/doctors",
     label: "Consultar Médicos",

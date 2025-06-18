@@ -26,22 +26,27 @@ export default function AvailabilityForm({ doctorId }: { doctorId: string }) {
   const [weekday, setWeekday] = useState("1");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
+  const [interval, setInterval] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     await createAvailability({
       doctorId,
       weekday: parseInt(weekday),
       startTime,
       endTime,
+      interval: interval ? parseInt(interval) : null,
     });
+
     setStartTime("");
     setEndTime("");
+    setInterval("");
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-4 gap-4">
         <Select value={weekday} onValueChange={setWeekday}>
           <SelectTrigger>
             <SelectValue placeholder="Dia da semana" />
@@ -66,6 +71,13 @@ export default function AvailabilityForm({ doctorId }: { doctorId: string }) {
           value={endTime}
           onChange={(e) => setEndTime(e.target.value)}
           required
+        />
+        <Input
+          type="number"
+          placeholder="Intervalo (min)"
+          value={interval}
+          onChange={(e) => setInterval(e.target.value)}
+          min="1"
         />
       </div>
 

@@ -26,7 +26,7 @@ const links = [
   },
   {
     label: "Pacientes",
-    href: "/dashboard/doctor/pacientes",
+    href: "/dashboard/doctor/patients",
     icon: Users,
   },
   {
@@ -42,7 +42,7 @@ export default function Sidebar() {
 
   const handleLogout = () => {
     deleteCookie("token");
-    router.push("/login");
+    router.push("/auth/login");
   };
 
   return (
@@ -76,7 +76,7 @@ export default function Sidebar() {
           className="w-full bg-green"
           onClick={async () => {
             await fetch("/api/auth/logout", { method: "POST" });
-            window.location.href = "/login";
+            window.location.href = "/auth/login";
           }}
         >
           Sair

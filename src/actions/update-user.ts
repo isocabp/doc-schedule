@@ -10,6 +10,8 @@ interface UpdateUserProps {
   phone?: string;
   password?: string;
   image?: string;
+  specialty?: string;
+  healthPlans?: string[];
 }
 
 export async function updateUser(data: UpdateUserProps) {
@@ -21,6 +23,8 @@ export async function updateUser(data: UpdateUserProps) {
     email: data.email,
     phone: data.phone || null,
     image: data.image,
+    specialty: data.specialty,
+    healthPlans: data.healthPlans || [],
   };
 
   if (data.password && data.password.trim() !== "") {

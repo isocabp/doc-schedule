@@ -1,3 +1,4 @@
+// src/app/dashboard/doctor/page.tsx
 import { getUserFromToken } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { CalendarDays, Users, Settings, LayoutDashboard } from "lucide-react";
@@ -5,6 +6,14 @@ import { formatWithOptions } from "date-fns/fp";
 import { ptBR } from "date-fns/locale/pt-BR";
 import Link from "next/link";
 import Sidebar from "./availability/_components/sidebar";
+
+interface Appointment {
+  id: string;
+  date: string;
+  patient: {
+    name: string;
+  };
+}
 
 export default async function DoctorDashboard() {
   const user = await getUserFromToken();
@@ -42,11 +51,11 @@ export default async function DoctorDashboard() {
   const newPatients = await prisma.appointment.count({
     where: {
       doctorId: user.id,
-      // Aqui você pode implementar uma lógica de "primeira consulta"
+      isFirstAppointment: true,
     },
   });
 
-  const recentAppointments = await prisma.appointment.findMany({
+  const recentAppointments: Appointment[] = await prisma.appointment.findMany({
     where: { doctorId: user.id },
     include: {
       patient: true,
