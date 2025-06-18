@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
@@ -176,6 +177,16 @@ export default function RegisterPage() {
               )}
             </Button>
           </form>
+
+          <div className="mt-4 text-center text-sm text-muted-foreground">
+            <span className="mr-1">Já possui conta?</span>
+            <Link
+              href={`/auth/login?type=${userType.toLowerCase()}`}
+              className="font-medium text-primary hover:underline"
+            >
+              Login
+            </Link>
+          </div>
         </CardContent>
       </Card>
     </div>

@@ -1,32 +1,55 @@
+// src/middleware.ts
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { verifyJwt } from "@/lib/auth";
 
-export async function middleware(req: NextRequest) {
-  const token = req.cookies.get("token")?.value;
+// Rotas que requerem autenticação
+const protectedRoutes = ["/dashboard", "/api/appointments", "/api/profile"];
 
-  const isAuth = !!token && verifyJwt(token);
+// Rotas acessíveis apenas por médicos
+const doctorOnlyRoutes = ["/dashboard/doctor", "/api/doctor"];
 
-  const isAuthPage =
-    req.nextUrl.pathname.startsWith("/auth/login") ||
-    req.nextUrl.pathname.startsWith("/auth/register");
+export async function middleware(request: NextRequest) {
+  const path = request.nextUrl.pathname;
 
-  if (isAuthPage && isAuth) {
-    return NextResponse.redirect(new URL("/dashboard", req.url));
+  // 1. Verifica se a rota é protegida
+  const isProtectedRoute = protectedRoutes.some((route) =>
+    path.startsWith(route)
+  );
+
+  const isDoctorRoute = doctorOnlyRoutes.some((route) =>
+    path.startsWith(route)
+  );
+
+  if (!isProtectedRoute) return NextResponse.next();
+
+  // 2. Pega o token dos cookies
+  const token = request.cookies.get("token")?.value;
+
+  // 3. Redireciona se não tiver token
+  if (!token) {
+    return NextResponse.redirect(
+      new URL(`/login?redirect=${encodeURIComponent(path)}`, request.url)
+    );
   }
 
-  if (!isAuth && !isAuthPage) {
-    return NextResponse.redirect(new URL("/auth/login", req.url));
+  // 4. Verifica token JWT
+  const decoded = verifyJwt(token);
+  if (!decoded) {
+    return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  return NextResponse.next();
+  // 5. Verifica rotas restritas a médicos
+  if (isDoctorRoute && decoded.role !== "DOCTOR") {
+    return NextResponse.redirect(new URL("/dashboard/patient", request.url));
+  }
+
+  // 6. Adiciona headers com dados do usuário
+  const headers = new Headers(request.headers);
+  headers.set("x-user-id", decoded.id);
+  headers.set("x-user-role", decoded.role);
+
+  return NextResponse.next({
+    request: { headers },
+  });
 }
-
-export const config = {
-  matcher: [
-    "/dashboard/:path*",
-    "/profile/:path*",
-    "/appointments/:path*",
-    "/auth/:path*",
-  ],
-};
