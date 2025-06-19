@@ -48,8 +48,8 @@ export default function PatientDashboard() {
       <Sidebar />
 
       <main className="flex-1 p-6">
-        <h1 className="text-3xl font-bold text-neutral-800 mb-6">
-          Bem-vindo(a) {patientName && `, ${patientName}`} 💜
+        <h1 className="text-2xl sm:text-3xl font-bold text-neutral-800 mb-6 animate-fade-in">
+          Bem-vindo(a) {patientName && `, ${patientName}`} 👋
         </h1>
 
         <div className="grid gap-6 md:grid-cols-2">

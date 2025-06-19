@@ -17,6 +17,7 @@ import {
 } from "@/components/ui";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
+import Image from "next/image";
 
 export default function LoginPage() {
   const [userType, setUserType] = useState<"patient" | "doctor">("patient");
@@ -60,9 +61,18 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-neutral-50 px-4">
-      <Card className="w-full max-w-md rounded-lg shadow-md">
-        <CardHeader className="pb-2">
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-[#dbeafe] via-white to-[#e0f2fe] px-4">
+      <div className="absolute top-2 flex justify-center w-full">
+        <Image
+          src="/img/logo.png"
+          alt="Logo Doc Schedule"
+          width={180}
+          height={180}
+          className="rounded-lg"
+        />
+      </div>
+      <Card className="w-full max-w-md rounded-lg shadow-md ">
+        <CardHeader className="pb-2 ">
           <CardTitle className="text-2xl font-semibold text-neutral-900">
             Login
           </CardTitle>

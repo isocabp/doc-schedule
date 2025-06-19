@@ -11,6 +11,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { UploadImage } from "@/components/UploadImage";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
+import Image from "next/image";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -64,10 +65,10 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-neutral-50 px-4">
-      <Card className="w-full max-w-md rounded-lg shadow-md">
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-[#dbeafe] via-white to-[#e0f2fe] px-4">
+      <Card className="w-full max-w-lg rounded-lg shadow-md ">
         <CardHeader className="pb-2">
-          <CardTitle className="text-2xl font-semibold text-neutral-900">
+          <CardTitle className="text-2xl font-semibold text-neutral-900 text-center">
             Cadastro
           </CardTitle>
 
@@ -78,19 +79,26 @@ export default function RegisterPage() {
             }
             className="mt-4"
           >
-            <TabsList>
-              <TabsTrigger value="patient">Paciente</TabsTrigger>
-              <TabsTrigger value="doctor">Médico</TabsTrigger>
+            <TabsList className="w-full">
+              <TabsTrigger value="patient" className="w-1/2">
+                Paciente
+              </TabsTrigger>
+              <TabsTrigger value="doctor" className="w-1/2">
+                Médico
+              </TabsTrigger>
             </TabsList>
           </Tabs>
         </CardHeader>
 
         <CardContent>
           <form className="space-y-5" onSubmit={handleSubmit}>
-            <UploadImage
-              label="Foto de Perfil"
-              onUploadComplete={(url) => setUploadedImage(url)}
-            />
+            {/* upload centralizado */}
+            <div className="flex justify-center">
+              <UploadImage
+                label="Foto de Perfil"
+                onUploadComplete={(url) => setUploadedImage(url)}
+              />
+            </div>
 
             <div>
               <Label htmlFor="name">Nome</Label>
@@ -157,6 +165,7 @@ export default function RegisterPage() {
                             type="checkbox"
                             name="healthPlans"
                             value={plan}
+                            className="rounded-sm"
                           />
                           {plan}
                         </label>
